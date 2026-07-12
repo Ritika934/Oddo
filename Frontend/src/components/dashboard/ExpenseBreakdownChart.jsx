@@ -1,14 +1,17 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import Card from '../common/Card';
 
-const data = [
-  { name: 'Fuel', value: 45, color: '#E8A33D' },
-  { name: 'Maintenance', value: 28, color: '#3DA5A0' },
-  { name: 'Toll', value: 14, color: '#3FAE6B' },
-  { name: 'Other', value: 13, color: '#8B94AA' },
+const COLORS = ['#E8A33D', '#3DA5A0', '#3FAE6B', '#8B94AA'];
+
+const DEFAULT_DATA = [
+  { name: 'Fuel', value: 45 },
+  { name: 'Maintenance', value: 28 },
+  { name: 'Toll', value: 14 },
+  { name: 'Other', value: 13 },
 ];
 
-export default function ExpenseBreakdownChart() {
+export default function ExpenseBreakdownChart({ data }) {
+  const chartData = data || DEFAULT_DATA;
   return (
     <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -17,9 +20,9 @@ export default function ExpenseBreakdownChart() {
       </div>
       <ResponsiveContainer width="100%" height={220}>
         <PieChart>
-          <Pie data={data} dataKey="value" nameKey="name" innerRadius={55} outerRadius={80} paddingAngle={3}>
-            {data.map((entry, i) => (
-              <Cell key={i} fill={entry.color} stroke="none" />
+          <Pie data={chartData} dataKey="value" nameKey="name" innerRadius={55} outerRadius={80} paddingAngle={3}>
+            {chartData.map((entry, i) => (
+              <Cell key={i} fill={COLORS[i % COLORS.length]} stroke="none" />
             ))}
           </Pie>
           <Tooltip contentStyle={{ borderRadius: 8, border: 'none', fontSize: 12 }} formatter={(v) => `${v}%`} />

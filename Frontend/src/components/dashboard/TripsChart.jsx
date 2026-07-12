@@ -1,12 +1,13 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Card from '../common/Card';
 
-const data = [
+const DEFAULT_DATA = [
   { day: 'Mon', trips: 18 }, { day: 'Tue', trips: 24 }, { day: 'Wed', trips: 20 },
   { day: 'Thu', trips: 28 }, { day: 'Fri', trips: 32 }, { day: 'Sat', trips: 22 }, { day: 'Sun', trips: 14 },
 ];
 
-export default function TripsChart() {
+export default function TripsChart({ data }) {
+  const chartData = data || DEFAULT_DATA;
   return (
     <Card className="p-5">
       <div className="mb-4 flex items-center justify-between">
@@ -14,7 +15,7 @@ export default function TripsChart() {
         <span className="font-mono text-[11px] text-ink-400">LAST 7 DAYS</span>
       </div>
       <ResponsiveContainer width="100%" height={220}>
-        <AreaChart data={data}>
+        <AreaChart data={chartData}>
           <defs>
             <linearGradient id="tripsGradient" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#3DA5A0" stopOpacity={0.35} />

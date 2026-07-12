@@ -4,18 +4,9 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import Button from '../../components/common/Button';
-import { ROLES, ROLE_LABELS } from '../../utils/constants';
-
-// Realistic backend credentials for mock users
-const BACKEND_CREDENTIALS = {
-  [ROLES.FLEET_MANAGER]: { email: 'manager@transitops.com', password: 'password123' },
-  [ROLES.DISPATCHER]: { email: 'dispatcher@transitops.com', password: 'password123' },
-  [ROLES.SAFETY_OFFICER]: { email: 'safety@transitops.com', password: 'password123' },
-  [ROLES.FINANCE_ANALYST]: { email: 'finance@transitops.com', password: 'password123' },
-};
 
 export default function Login() {
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const { login, loading } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
@@ -29,16 +20,6 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err) {
       setServerError(err.message);
-    }
-  };
-
-  const handleQuickFill = async (role) => {
-    const creds = BACKEND_CREDENTIALS[role];
-    if (creds) {
-      setValue('email', creds.email);
-      setValue('password', creds.password);
-      // Auto submit the form
-      onSubmit(creds);
     }
   };
 
@@ -92,25 +73,6 @@ export default function Login() {
       <p className="mt-4 text-sm text-ink-500 dark:text-paper-200">
         No account? <Link to="/register" className="font-medium text-transit hover:underline">Register</Link>
       </p>
-
-      <div className="mt-8">
-        <div className="flex items-center gap-3 text-xs text-ink-400">
-          <div className="h-px flex-1 bg-ink-100 dark:bg-ink-700" />
-          <span className="font-mono tracking-widest">QUICK FILL DEMO ACCOUNTS</span>
-          <div className="h-px flex-1 bg-ink-100 dark:bg-ink-700" />
-        </div>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          {Object.values(ROLES).map((role) => (
-            <button
-              key={role}
-              onClick={() => handleQuickFill(role)}
-              className="rounded-lg border border-ink-200/70 dark:border-ink-600 px-3 py-2 text-xs font-medium text-ink-600 dark:text-paper-200 hover:border-transit hover:text-transit-dark dark:hover:text-transit-light transition-colors"
-            >
-              {ROLE_LABELS[role]}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
