@@ -5,7 +5,7 @@ import { createTrip, getTripById, updateTrip, getAllTrips } from "../repositorie
 
 // Create Draft Trip
 export const createDraftTrip = async (tripData) => {
-  // Check if vehicle exists
+  console.log("vehicle")
   const vehicle = await getVehicleById(tripData.vehicle_id);
   if (!vehicle) {
     throw new Error("Vehicle not found");
