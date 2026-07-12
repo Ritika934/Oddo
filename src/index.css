@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-ink-600/20;
+  }
+  body {
+    @apply font-body bg-paper-50 text-ink-900 dark:bg-ink-900 dark:text-paper-100 antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    @apply bg-signal/30;
+  }
+}
+
+@layer utilities {
+  .route-line {
+    background-image: repeating-linear-gradient(90deg, currentColor 0 6px, transparent 6px 12px);
+    height: 2px;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-ink-600/40 rounded-full; }
+}
