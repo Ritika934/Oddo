@@ -8,21 +8,15 @@ import Table from '../components/common/Table';
 import Badge from '../components/common/Badge';
 import { daysUntil, formatDate } from '../utils/formatDate';
 
-const MOCK_DRIVERS = [
-  { id: 1, name: 'Ranveer Singh', phone: '98140 22110', license: 'PB-0420190001234', expiry: '2026-08-02', score: 92, status: 'Available' },
-  { id: 2, name: 'Amanpreet Kaur', phone: '98720 11245', license: 'PB-0620210004512', expiry: '2027-01-15', score: 88, status: 'On Trip' },
-  { id: 3, name: 'Harjit Singh', phone: '99150 33221', license: 'PB-0320180007781', expiry: '2026-07-20', score: 76, status: 'Off Duty' },
-  { id: 4, name: 'Manpreet Sidhu', phone: '90410 88712', license: 'PB-0920220002290', expiry: '2028-03-11', score: 95, status: 'Suspended' },
-];
-
 const STATUS_TONE = { Available: 'success', 'On Trip': 'info', 'Off Duty': 'neutral', Suspended: 'danger' };
 
 export default function Drivers() {
+  const [drivers, setDrivers] = useState([]);
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(
-    () => MOCK_DRIVERS.filter((d) => d.name.toLowerCase().includes(search.toLowerCase())),
-    [search]
+    () => drivers.filter((d) => d.name.toLowerCase().includes(search.toLowerCase())),
+    [drivers, search]
   );
 
   const columns = [
