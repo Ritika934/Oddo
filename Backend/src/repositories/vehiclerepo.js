@@ -96,7 +96,7 @@ export const getVehicleById = async (id) => {
 
   return rows[0];
 };
-export const updateVehicle = async (id, vehicleData) => {
+export const updateVehicle = async (id, vehicleData, client) => {
   const {
     registration_number,
     vehicle_name,
@@ -136,7 +136,8 @@ export const updateVehicle = async (id, vehicleData) => {
     id,
   ];
 
-  const { rows } = await pool.query(query, values);
+  const db = client || pool;
+  const { rows } = await db.query(query, values);
 
   return rows[0];
 };

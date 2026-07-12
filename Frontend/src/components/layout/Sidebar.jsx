@@ -63,10 +63,7 @@ export default function Sidebar({ mobileOpen, onNavigate }) {
         ))}
       </nav>
 
-      <div className="absolute bottom-0 left-0 right-0 border-t border-ink-100 dark:border-ink-700 p-4">
-        <div className="route-line text-ink-200 dark:text-ink-600 mb-3" />
-        <p className="font-mono text-[10px] tracking-widest text-ink-400">MANIFEST v1.0</p>
-      </div>
+
     </aside>
   );
 }

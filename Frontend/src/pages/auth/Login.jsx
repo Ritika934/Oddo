@@ -6,9 +6,17 @@ import { useToast } from '../../context/ToastContext';
 import Button from '../../components/common/Button';
 import { ROLES, ROLE_LABELS } from '../../utils/constants';
 
+// Realistic backend credentials for mock users
+const BACKEND_CREDENTIALS = {
+  [ROLES.FLEET_MANAGER]: { email: 'manager@transitops.com', password: 'password123' },
+  [ROLES.DISPATCHER]: { email: 'dispatcher@transitops.com', password: 'password123' },
+  [ROLES.SAFETY_OFFICER]: { email: 'safety@transitops.com', password: 'password123' },
+  [ROLES.FINANCE_ANALYST]: { email: 'finance@transitops.com', password: 'password123' },
+};
+
 export default function Login() {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const { login, loginAsDemo, loading } = useAuth();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const { login, loading } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState('');
@@ -24,10 +32,14 @@ export default function Login() {
     }
   };
 
-  const handleDemo = (role) => {
-    loginAsDemo(role, ROLE_LABELS[role]);
-    showToast(`Signed in as ${ROLE_LABELS[role]} (demo)`, 'info');
-    navigate('/dashboard');
+  const handleQuickFill = async (role) => {
+    const creds = BACKEND_CREDENTIALS[role];
+    if (creds) {
+      setValue('email', creds.email);
+      setValue('password', creds.password);
+      // Auto submit the form
+      onSubmit(creds);
+    }
   };
 
   return (
@@ -45,7 +57,10 @@ export default function Login() {
           <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Email</label>
           <input
             type="email"
-            {...register('email', { required: 'Email is required' })}
+            {...register('email', {
+              required: 'Email is required',
+              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' },
+            })}
             placeholder="you@transitops.com"
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-transit"
           />
@@ -81,14 +96,14 @@ export default function Login() {
       <div className="mt-8">
         <div className="flex items-center gap-3 text-xs text-ink-400">
           <div className="h-px flex-1 bg-ink-100 dark:bg-ink-700" />
-          <span className="font-mono tracking-widest">PREVIEW WITHOUT BACKEND</span>
+          <span className="font-mono tracking-widest">QUICK FILL DEMO ACCOUNTS</span>
           <div className="h-px flex-1 bg-ink-100 dark:bg-ink-700" />
         </div>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {Object.values(ROLES).map((role) => (
             <button
               key={role}
-              onClick={() => handleDemo(role)}
+              onClick={() => handleQuickFill(role)}
               className="rounded-lg border border-ink-200/70 dark:border-ink-600 px-3 py-2 text-xs font-medium text-ink-600 dark:text-paper-200 hover:border-transit hover:text-transit-dark dark:hover:text-transit-light transition-colors"
             >
               {ROLE_LABELS[role]}

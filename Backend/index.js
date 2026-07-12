@@ -1,19 +1,24 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
+import "./config/env.js";
 import "./config/Db.js";
 import authRoutes from "./routes/authroutes.js";
 import vehicleRoutes from "./routes/vehicleroutes.js";
-dotenv.config();
+import driverRoutes from "./routes/driverroutes.js";
+import tripRoutes from "./routes/triproutes.js";
 
-const app=express();
+const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth",authRoutes);
-app.use("/api/vehicles", vehicleRoutes);
-const PORT=process.env.PORT;
 
-app.listen(PORT,()=>{
+app.use("/api/auth", authRoutes);
+app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/drivers", driverRoutes);
+app.use("/api/trips", tripRoutes);
+
+const PORT = process.env.PORT;
+
+app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
 });

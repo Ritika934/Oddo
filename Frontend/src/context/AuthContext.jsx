@@ -23,13 +23,20 @@ export function AuthProvider({ children }) {
     setError(null);
     try {
       const { data } = await authApi.login({ email, password });
-      const token = data?.data?.token;
-      const loggedInUser = data?.data?.user;
-      if (token) localStorage.setItem(TOKEN_KEY, token);
+      const token = data?.token;
+      const loggedInUser = data?.user
+        ? { ...data.user, name: data.user.full_name || data.user.name }
+        : null;
+
+      if (!token || !loggedInUser) {
+        throw new Error(data?.message || 'Invalid login response from server.');
+      }
+
+      localStorage.setItem(TOKEN_KEY, token);
       setUser(loggedInUser);
       return loggedInUser;
     } catch (err) {
-      const message = err?.response?.data?.message || 'Unable to reach the server. Try demo mode below.';
+      const message = err?.response?.data?.message || err.message || 'Unable to reach the server. Try demo mode below.';
       setError(message);
       throw new Error(message);
     } finally {
