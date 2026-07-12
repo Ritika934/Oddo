@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { authApi } from '../../api/auth.api';
 import { useToast } from '../../context/ToastContext';
 import Button from '../../components/common/Button';
+import { ROLE_LABELS } from '../../utils/constants';
 
 export default function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -70,6 +71,22 @@ export default function Register() {
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
           />
           {errors.password && <p className="mt-1 text-xs text-danger">{errors.password.message}</p>}
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Role</label>
+          <select
+            {...register('role', { required: 'Please select a role' })}
+            className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
+          >
+            <option value="">Select your role</option>
+            {Object.entries(ROLE_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+          {errors.role && <p className="mt-1 text-xs text-danger">{errors.role.message}</p>}
         </div>
 
         {serverError && (

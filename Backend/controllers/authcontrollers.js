@@ -5,9 +5,11 @@ import jwt from "jsonwebtoken";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 6;
 
-const validateSignupInput = ({ full_name, email, password }) => {
-  if (!full_name || !email || !password) {
-    return "All fields are required";
+const VALID_ROLES = ["fleet_manager", "dispatcher", "safety_officer", "finance_analyst"];
+
+const validateSignupInput = ({ full_name, email, password, role }) => {
+  if (!full_name || !email || !password || !role) {
+    return "All fields are required (including role)";
   }
   if (full_name.trim().length < 2) {
     return "Full name must be at least 2 characters";
@@ -17,6 +19,9 @@ const validateSignupInput = ({ full_name, email, password }) => {
   }
   if (password.length < MIN_PASSWORD_LENGTH) {
     return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+  }
+  if (!VALID_ROLES.includes(role)) {
+    return "Invalid role specified";
   }
   return null;
 };
@@ -33,9 +38,9 @@ const validateLoginInput = ({ email, password }) => {
 
 export const signup = async (req, res) => {
   try {
-    const { full_name, email, password } = req.body;
+    const { full_name, email, password, role } = req.body;
 
-    const validationError = validateSignupInput({ full_name, email, password });
+    const validationError = validateSignupInput({ full_name, email, password, role });
     if (validationError) {
       return res.status(400).json({ message: validationError });
     }
@@ -56,9 +61,9 @@ export const signup = async (req, res) => {
 
     await pool.query(
       `INSERT INTO users
-      (full_name,email,password)
-      VALUES($1,$2,$3)`,
-      [trimmedName, normalizedEmail, hashedPassword]
+      (full_name, email, password, role)
+      VALUES($1, $2, $3, $4)`,
+      [trimmedName, normalizedEmail, hashedPassword, role]
     );
 
     return res.status(201).json({ message: "Signup Successful" });
@@ -85,8 +90,7 @@ export const login = async (req, res) => {
     );
     const user = result.rows[0];
 
-    // Fixed: check the user exists BEFORE comparing passwords,
-    // otherwise this throws when the email isn't registered.
+    // Fixed: check the user exists BEFORE comparing passwords
     if (!user) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
@@ -98,7 +102,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email },
+      { id: user.id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -110,6 +114,7 @@ export const login = async (req, res) => {
         id: user.id,
         full_name: user.full_name,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (err) {
