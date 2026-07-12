@@ -2,6 +2,7 @@ import pool from "../../config/Db.js";
 import { getVehicleById, updateVehicle } from "../repositories/vehiclerepo.js";
 import { getDriverById, updateDriver } from "../repositories/driverrepo.js";
 import { createTrip, getTripById, updateTrip, getAllTrips } from "../repositories/triprepo.js";
+import { addGpsLog } from "../repositories/gpsrepo.js";
 
 // Create Draft Trip
 export const createDraftTrip = async (tripData) => {
