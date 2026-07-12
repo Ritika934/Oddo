@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import { refreshCache } from "../src/jobs/queues.js";
 import { addVehicle, fetchAllVehicles,  fetchVehicleById, editVehicle,  removeVehicle,} from "../src/services/vehicleservices.js";
 
 export const createVehicle = async (req, res) => {
@@ -14,6 +15,7 @@ export const createVehicle = async (req, res) => {
 
     // Call service
     const vehicle = await addVehicle(req.body);
+    await refreshCache();
 
     return res.status(201).json({
       message: "Vehicle created successfully",
@@ -31,6 +33,7 @@ export const updateVehicle = async (req, res) => {
     const { id } = req.params;
 
     const updatedVehicle = await editVehicle(id, req.body);
+    await refreshCache();
 
     return res.status(200).json({
       message: "Vehicle updated successfully",
@@ -47,6 +50,7 @@ export const deleteVehicle = async (req, res) => {
     const { id } = req.params;
 
     const vehicle = await removeVehicle(id);
+    await refreshCache();
 
     return res.status(200).json({
       message: "Vehicle retired successfully",

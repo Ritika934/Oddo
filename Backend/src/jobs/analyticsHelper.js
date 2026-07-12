@@ -1,21 +1,10 @@
-import pool from "../config/Db.js";
-import redisConnection from "../config/redis.js";
+import pool from "../../config/Db.js";
+import redisConnection from "../../config/redis.js";
 
-export const getDashboardStats = async (req, res) => {
+export const compileAndCacheStats = async () => {
+  console.log("Compiling fleet statistics...");
   try {
-    // 1. Try fetching from Redis Cache
-    const cachedStats = await redisConnection.get("dashboard_stats");
-    if (cachedStats) {
-      console.log("Serving dashboard statistics from Redis cache");
-      return res.status(200).json({
-        message: "Dashboard statistics fetched successfully (cached)",
-        stats: JSON.parse(cachedStats)
-      });
-    }
-
-    console.log("Cache miss! Calculating statistics from PostgreSQL...");
-
-    // 2. Fetch real-time vehicle status counts
+    // 1. Fetch vehicle status counts
     const vehicleStatsQuery = `
       SELECT status, COUNT(*)::integer as count, COALESCE(SUM(odometer), 0)::double precision as total_odo
       FROM vehicles
@@ -23,7 +12,7 @@ export const getDashboardStats = async (req, res) => {
     `;
     const { rows: vehicleRows } = await pool.query(vehicleStatsQuery);
 
-    // 3. Fetch driver status counts
+    // 2. Fetch driver status counts
     const driverStatsQuery = `
       SELECT status, COUNT(*)::integer as count
       FROM drivers
@@ -31,7 +20,7 @@ export const getDashboardStats = async (req, res) => {
     `;
     const { rows: driverRows } = await pool.query(driverStatsQuery);
 
-    // Formulate structured counts
+    // Formulate counts
     const vehicleCounts = { available: 0, on_trip: 0, in_shop: 0, retired: 0 };
     let totalOdometer = 0;
     vehicleRows.forEach(row => {
@@ -117,16 +106,10 @@ export const getDashboardStats = async (req, res) => {
 
     // Store in Redis cache for 1 hour
     await redisConnection.setex("dashboard_stats", 3600, JSON.stringify(compileData));
-
-    return res.status(200).json({
-      message: "Dashboard statistics fetched successfully",
-      stats: compileData
-    });
-
-  } catch (error) {
-    console.error("Dashboard controller error:", error);
-    return res.status(500).json({
-      message: error.message || "Failed to load dashboard statistics"
-    });
+    console.log("Cached dashboard statistics successfully in Redis!");
+    return compileData;
+  } catch (err) {
+    console.error("Failed to compile dashboard statistics:", err);
+    throw err;
   }
 };

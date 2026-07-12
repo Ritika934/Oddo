@@ -86,13 +86,14 @@ values.push(offset);
 
   return rows;
 };
-export const getVehicleById = async (id) => {
+export const getVehicleById = async (id, client) => {
+  const db = client || pool;
   const query = `
     SELECT * FROM vehicles
     WHERE id = $1;
   `;
 
-  const { rows } = await pool.query(query, [id]);
+  const { rows } = await db.query(query, [id]);
 
   return rows[0];
 };
@@ -152,6 +153,21 @@ export const retireVehicle = async (id) => {
   `;
 
   const { rows } = await pool.query(query, [id]);
+
+  return rows[0];
+};
+export const updateVehicleStatus = async (id, status) => {
+
+  const query = `
+    UPDATE vehicles
+    SET
+      status = $1,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = $2
+    RETURNING *;
+  `;
+
+  const { rows } = await pool.query(query, [status, id]);
 
   return rows[0];
 };

@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import { refreshCache } from "../src/jobs/queues.js";
 import {
   addDriver,
   fetchAllDrivers,
@@ -17,6 +18,7 @@ export const createDriver = async (req, res) => {
     }
 
     const driver = await addDriver(req.body);
+    await refreshCache();
 
     return res.status(201).json({
       message: "Driver created successfully",
@@ -107,6 +109,7 @@ export const updateDriver = async(req,res)=>{
       id,
       req.body
     );
+    await refreshCache();
 
     return res.status(200).json({
       message:"Driver updated successfully",
@@ -128,6 +131,7 @@ export const suspendDriver = async(req,res)=>{
 
     const {id}=req.params;
     const driver = await removeDriver(id);
+    await refreshCache();
     return res.status(200).json({
       message:"Driver suspended successfully",
       driver,

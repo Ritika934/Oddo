@@ -6,7 +6,8 @@ import {
   getTrip,
   dispatchTripApi,
   completeTripApi,
-  cancelTripApi
+  cancelTripApi,
+  getGpsLogsApi
 } from "../controllers/tripcontroller.js";
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.get("/:id", getTrip);
 router.patch("/:id/dispatch", dispatchTripApi);
 router.patch("/:id/complete", completeTripValidator, completeTripApi);
 router.patch("/:id/cancel", cancelTripApi);
+router.get("/:id/gps", getGpsLogsApi);
 
 export default router;

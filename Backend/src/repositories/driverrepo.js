@@ -95,17 +95,15 @@ export const getAllDrivers = async (
 
 
 // Get driver by id
-export const getDriverById = async (id) => {
-
+export const getDriverById = async (id, client) => {
+  const db = client || pool;
   const query = `
     SELECT *
     FROM drivers
     WHERE id=$1;
   `;
 
-
-  const { rows } = await pool.query(query,[id]);
-
+  const { rows } = await db.query(query,[id]);
 
   return rows[0];
 };
