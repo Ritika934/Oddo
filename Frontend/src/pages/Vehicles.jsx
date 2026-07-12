@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { FiPlus, FiEdit2, FiTrash2, FiActivity, FiCheckCircle, FiTool, FiAlertOctagon } from 'react-icons/fi';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
@@ -32,7 +32,7 @@ const STATUS_LABELS = {
 export default function Vehicles() {
   const { showToast } = useToast();
   const [vehicles, setVehicles] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState({ status: '', type: '' });
   const [page, setPage] = useState(1);
@@ -46,12 +46,13 @@ export default function Vehicles() {
   // Confirm delete states
   const [vehicleToRetire, setVehicleToRetire] = useState(null);
 
-  const fetchVehicles = async () => {
+  const fetchVehicles = useCallback(async () => {
     setLoading(true);
     try {
       const response = await vehicleApi.getAll({
         search,
         status: filters.status,
+        type: filters.type,
         page,
         limit: 10
       });
@@ -66,11 +67,11 @@ export default function Vehicles() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [search, filters, page, showToast]);
 
   useEffect(() => {
     fetchVehicles();
-  }, [search, filters, page]);
+  }, [fetchVehicles]);
 
   // Real-time Fleet distribution calculations for graphics
   const stats = useMemo(() => {

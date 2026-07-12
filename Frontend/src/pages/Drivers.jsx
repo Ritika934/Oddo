@@ -37,7 +37,6 @@ export default function Drivers() {
   const [submitting, setSubmitting] = useState(false);
 
   const [suspendTarget, setSuspendTarget] = useState(null);
-  const [suspending, setSuspending] = useState(false);
 
   const loadDrivers = useCallback(async () => {
     setLoading(true);
@@ -99,7 +98,6 @@ export default function Drivers() {
 
   const handleSuspend = async () => {
     if (!suspendTarget) return;
-    setSuspending(true);
     try {
       await driverApi.suspend(suspendTarget.id);
       showToast(`${suspendTarget.name} suspended.`, 'success');
@@ -107,8 +105,6 @@ export default function Drivers() {
       loadDrivers();
     } catch (err) {
       showToast(err?.response?.data?.message || 'Could not suspend driver.', 'error');
-    } finally {
-      setSuspending(false);
     }
   };
 

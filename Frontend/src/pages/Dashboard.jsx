@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { FiTruck, FiCheckCircle, FiTool, FiMap, FiUsers, FiPieChart, FiDroplet, FiDollarSign } from 'react-icons/fi';
 import KpiCard from '../components/dashboard/KpiCard';
 import TripsChart from '../components/dashboard/TripsChart';
@@ -18,7 +18,7 @@ export default function Dashboard() {
 
   const firstName = user?.name?.split(' ')[0];
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await dashboardApi.getStats();
       if (response && response.data) {
@@ -29,11 +29,11 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [showToast]);
 
   useEffect(() => {
     fetchStats();
-  }, []);
+  }, [fetchStats]);
 
   if (loading) {
     return (
