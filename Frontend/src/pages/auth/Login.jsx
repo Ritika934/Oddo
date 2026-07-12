@@ -45,7 +45,10 @@ export default function Login() {
           <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Email</label>
           <input
             type="email"
-            {...register('email', { required: 'Email is required' })}
+            {...register('email', {
+              required: 'Email is required',
+              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' },
+            })}
             placeholder="you@transitops.com"
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-transit"
           />

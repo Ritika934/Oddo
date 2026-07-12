@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { authApi } from '../../api/auth.api';
 import { useToast } from '../../context/ToastContext';
 import Button from '../../components/common/Button';
-import { ROLES, ROLE_LABELS } from '../../utils/constants';
 
 export default function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -38,39 +37,36 @@ export default function Register() {
         <div>
           <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Full name</label>
           <input
-            {...register('name', { required: 'Name is required' })}
+            {...register('full_name', {
+              required: 'Full name is required',
+              minLength: { value: 2, message: 'Full name must be at least 2 characters' },
+            })}
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
           />
-          {errors.name && <p className="mt-1 text-xs text-danger">{errors.name.message}</p>}
+          {errors.full_name && <p className="mt-1 text-xs text-danger">{errors.full_name.message}</p>}
         </div>
 
         <div>
           <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Email</label>
           <input
             type="email"
-            {...register('email', { required: 'Email is required' })}
+            {...register('email', {
+              required: 'Email is required',
+              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' },
+            })}
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
           />
           {errors.email && <p className="mt-1 text-xs text-danger">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Role</label>
-          <select
-            {...register('role', { required: true })}
-            className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
-          >
-            {Object.values(ROLES).map((r) => (
-              <option key={r} value={r}>{ROLE_LABELS[r]}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
           <label className="mb-1.5 block text-sm font-medium text-ink-700 dark:text-paper-100">Password</label>
           <input
             type="password"
-            {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'At least 6 characters' } })}
+            {...register('password', {
+              required: 'Password is required',
+              minLength: { value: 6, message: 'At least 6 characters' },
+            })}
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
           />
           {errors.password && <p className="mt-1 text-xs text-danger">{errors.password.message}</p>}
