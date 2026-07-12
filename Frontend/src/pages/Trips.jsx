@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { FiPlus, FiArrowRight, FiCheckSquare, FiXCircle, FiMapPin, FiCompass } from 'react-icons/fi';
+import { FiPlus, FiArrowRight, FiCheckSquare, FiXCircle, FiMapPin, FiCompass, FiSend } from 'react-icons/fi';
 import PageHeader from '../components/common/PageHeader';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
@@ -301,6 +301,27 @@ export default function Trips() {
       key: 'actions',
       header: '',
       render: (r) => {
+        if (r.status === 'Draft') {
+          return (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={async () => {
+                  try {
+                    await tripApi.dispatch(r.id);
+                    showToast(`Trip ${r.code} dispatched successfully.`, 'success');
+                    loadTrips();
+                  } catch (err) {
+                    showToast(err?.response?.data?.message || 'Failed to dispatch trip', 'error');
+                  }
+                }}
+                className="flex items-center gap-1 rounded-md px-2 py-1 text-xs font-semibold bg-transit/10 text-transit hover:bg-transit hover:text-white transition-all duration-150"
+                aria-label="Dispatch trip"
+              >
+                <FiSend size={13} /> Dispatch
+              </button>
+            </div>
+          );
+        }
         if (r.status !== 'Dispatched') return null;
         return (
           <div className="flex items-center gap-2">

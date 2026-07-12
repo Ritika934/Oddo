@@ -67,7 +67,7 @@ export const getAllTrips = async (
   limit = 10
 ) => {
   let query = `
-    SELECT t.*, v.registration_number as vehicle_reg, d.name as driver_name
+    SELECT t.*, v.registration_number as vehicle_reg, v.registration_number, v.vehicle_name, d.name as driver_name
     FROM trips t
     JOIN vehicles v ON t.vehicle_id = v.id
     JOIN drivers d ON t.driver_id = d.id
