@@ -77,7 +77,7 @@ export default function Vehicles() {
   const stats = useMemo(() => {
     const counts = { available: 0, on_trip: 0, in_shop: 0, retired: 0 };
     vehicles.forEach(v => {
-      const status = v.status?.toLowerCase();
+      const status = v.status?.toLowerCase().replace(' ', '_');
       if (counts[status] !== undefined) {
         counts[status]++;
       }
@@ -148,7 +148,7 @@ export default function Vehicles() {
     { key: 'max_load_capacity', header: 'Capacity', render: (r) => <span>{r.max_load_capacity} kg</span> },
     { key: 'odometer', header: 'Odometer', render: (r) => <span>{Number(r.odometer).toLocaleString()} km</span> },
     { key: 'acquisition_cost', header: 'Cost', render: (r) => <span>{formatCurrency(r.acquisition_cost)}</span> },
-    { key: 'status', header: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status?.toLowerCase()] || 'neutral'}>{STATUS_LABELS[r.status?.toLowerCase()] || r.status}</Badge> },
+    { key: 'status', header: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status?.toLowerCase().replace(' ', '_')] || 'neutral'}>{STATUS_LABELS[r.status?.toLowerCase().replace(' ', '_')] || r.status}</Badge> },
     {
       key: 'actions',
       header: '',
@@ -286,7 +286,7 @@ export default function Vehicles() {
 
       {/* Add / Edit Modal */}
       <Modal
-        isOpen={isFormOpen}
+        open={isFormOpen}
         onClose={() => { setIsFormOpen(false); setSelectedVehicle(null); }}
         title={selectedVehicle ? 'Edit Vehicle Details' : 'Register New Vehicle'}
       >
@@ -300,8 +300,8 @@ export default function Vehicles() {
 
       {/* Retire Confirmation dialog */}
       <ConfirmDialog
-        isOpen={!!vehicleToRetire}
-        onClose={() => setVehicleToRetire(null)}
+        open={!!vehicleToRetire}
+        onCancel={() => setVehicleToRetire(null)}
         onConfirm={handleRetire}
         title="Retire Vehicle?"
         message={`Are you sure you want to retire vehicle ${vehicleToRetire?.registration_number}? This will change its status to Retired and it will no longer be available for dispatch.`}

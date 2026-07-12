@@ -18,6 +18,7 @@ export const createVehicle = async (vehicleData) => {
     max_load_capacity,
     odometer,
     acquisition_cost,
+    status,
   } = vehicleData;
 
   const query = `
@@ -29,9 +30,10 @@ export const createVehicle = async (vehicleData) => {
       vehicle_type,
       max_load_capacity,
       odometer,
-      acquisition_cost
+      acquisition_cost,
+      status
     )
-    VALUES($1,$2,$3,$4,$5,$6,$7)
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8)
     RETURNING *;
   `;
 
@@ -43,6 +45,7 @@ export const createVehicle = async (vehicleData) => {
     max_load_capacity,
     odometer || 0,
     acquisition_cost,
+    status || 'Available',
   ];
 
   const { rows } = await pool.query(query, values);

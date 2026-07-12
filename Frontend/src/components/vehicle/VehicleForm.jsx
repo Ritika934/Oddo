@@ -15,7 +15,7 @@ export default function VehicleForm({ initialData, onSubmit, onCancel, loading }
         max_load_capacity: initialData.max_load_capacity || '',
         odometer: initialData.odometer || 0,
         acquisition_cost: initialData.acquisition_cost || '',
-        status: initialData.status || 'available',
+        status: initialData.status || 'Available',
       });
     } else {
       reset({
@@ -26,7 +26,7 @@ export default function VehicleForm({ initialData, onSubmit, onCancel, loading }
         max_load_capacity: '',
         odometer: 0,
         acquisition_cost: '',
-        status: 'available',
+        status: 'Available',
       });
     }
   }, [initialData, reset]);
@@ -162,10 +162,10 @@ export default function VehicleForm({ initialData, onSubmit, onCancel, loading }
             {...register('status')}
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 focus:outline-none focus:ring-2 focus:ring-transit"
           >
-            <option value="available">Available</option>
-            <option value="on_trip">On Trip</option>
-            <option value="in_shop">In Shop</option>
-            <option value="retired">Retired</option>
+            <option value="Available">Available</option>
+            <option value="On Trip">On Trip</option>
+            <option value="In Shop">In Shop</option>
+            <option value="Retired">Retired</option>
           </select>
         </div>
       )}

@@ -26,7 +26,7 @@ export default function Sidebar({ mobileOpen, onNavigate }) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-40 w-64 shrink-0 transform border-r border-ink-100 dark:border-ink-700 bg-white dark:bg-ink-850 transition-transform lg:static lg:translate-x-0
+      className={`fixed inset-y-0 left-0 z-40 w-64 shrink-0 transform border-r border-ink-100 dark:border-ink-700 bg-white dark:bg-ink-850 transition-transform lg:translate-x-0
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
     >
       <div className="flex h-16 items-center gap-2 border-b border-ink-100 dark:border-ink-700 px-5">
