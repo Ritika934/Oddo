@@ -4,7 +4,14 @@ import redisConnection from "../config/redis.js";
 export const getDashboardStats = async (req, res) => {
   try {
     // 1. Try fetching from Redis Cache
-    const cachedStats = await redisConnection.get("dashboard_stats");
+    let cachedStats = null;
+    if (redisConnection.status === "ready") {
+      try {
+        cachedStats = await redisConnection.get("dashboard_stats");
+      } catch (redisErr) {
+        console.warn("Failed to get dashboard statistics from Redis:", redisErr.message);
+      }
+    }
     if (cachedStats) {
       console.log("Serving dashboard statistics from Redis cache");
       return res.status(200).json({
@@ -116,7 +123,13 @@ export const getDashboardStats = async (req, res) => {
     };
 
     // Store in Redis cache for 1 hour
-    await redisConnection.setex("dashboard_stats", 3600, JSON.stringify(compileData));
+    if (redisConnection.status === "ready") {
+      try {
+        await redisConnection.setex("dashboard_stats", 3600, JSON.stringify(compileData));
+      } catch (redisErr) {
+        console.warn("Failed to cache dashboard statistics in Redis:", redisErr.message);
+      }
+    }
 
     return res.status(200).json({
       message: "Dashboard statistics fetched successfully",

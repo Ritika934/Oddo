@@ -105,8 +105,14 @@ export const compileAndCacheStats = async () => {
     };
 
     // Store in Redis cache for 1 hour
-    await redisConnection.setex("dashboard_stats", 3600, JSON.stringify(compileData));
-    console.log("Cached dashboard statistics successfully in Redis!");
+    if (redisConnection.status === "ready") {
+      try {
+        await redisConnection.setex("dashboard_stats", 3600, JSON.stringify(compileData));
+        console.log("Cached dashboard statistics successfully in Redis!");
+      } catch (redisErr) {
+        console.warn("Failed to cache dashboard statistics in Redis:", redisErr.message);
+      }
+    }
     return compileData;
   } catch (err) {
     console.error("Failed to compile dashboard statistics:", err);

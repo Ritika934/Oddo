@@ -103,7 +103,8 @@ export default function VehicleForm({ initialData, onSubmit, onCancel, loading }
             step="any"
             {...register('max_load_capacity', {
               required: 'Capacity is required',
-              min: { value: 0.1, message: 'Must be > 0' }
+              min: { value: 0.1, message: 'Must be > 0' },
+              valueAsNumber: true,
             })}
             placeholder="1500"
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-transit"
@@ -120,7 +121,8 @@ export default function VehicleForm({ initialData, onSubmit, onCancel, loading }
           <input
             type="number"
             {...register('odometer', {
-              min: { value: 0, message: 'Cannot be negative' }
+              min: { value: 0, message: 'Cannot be negative' },
+              valueAsNumber: true,
             })}
             placeholder="0"
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-transit"
@@ -139,7 +141,8 @@ export default function VehicleForm({ initialData, onSubmit, onCancel, loading }
             step="any"
             {...register('acquisition_cost', {
               required: 'Cost is required',
-              min: { value: 0, message: 'Cannot be negative' }
+              min: { value: 0, message: 'Cannot be negative' },
+              valueAsNumber: true,
             })}
             placeholder="750000"
             className="w-full rounded-lg border border-ink-200 dark:border-ink-600 bg-white dark:bg-ink-800 px-3.5 py-2.5 text-sm text-ink-900 dark:text-paper-100 placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-transit"

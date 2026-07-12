@@ -10,7 +10,7 @@ const pool = new Pool({
   },
 });
 console.log("reached here ")
-pool.connect()
+pool.query("SELECT NOW()")
   .then(() => {
     console.log("Connected to Database");
   })

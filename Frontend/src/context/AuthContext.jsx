@@ -6,15 +6,15 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem(USER_KEY);
+    const saved = sessionStorage.getItem(USER_KEY);
     return saved ? JSON.parse(saved) : null;
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (user) localStorage.setItem(USER_KEY, JSON.stringify(user));
-    else localStorage.removeItem(USER_KEY);
+    if (user) sessionStorage.setItem(USER_KEY, JSON.stringify(user));
+    else sessionStorage.removeItem(USER_KEY);
   }, [user]);
 
   // Real login — expects backend running at VITE_API_URL.
@@ -32,7 +32,7 @@ export function AuthProvider({ children }) {
         throw new Error(data?.message || 'Invalid login response from server.');
       }
 
-      localStorage.setItem(TOKEN_KEY, token);
+      sessionStorage.setItem(TOKEN_KEY, token);
       setUser(loggedInUser);
       return loggedInUser;
     } catch (err) {
@@ -47,13 +47,13 @@ export function AuthProvider({ children }) {
   // Demo login — lets the UI be reviewed before the backend is wired up (Phase 14).
   const loginAsDemo = (role, name = 'Demo User') => {
     const demoUser = { id: 'demo-' + role, name, email: `${role}@transitops.demo`, role };
-    localStorage.setItem(TOKEN_KEY, 'demo-token');
+    sessionStorage.setItem(TOKEN_KEY, 'demo-token');
     setUser(demoUser);
   };
 
   const logout = () => {
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(USER_KEY);
     setUser(null);
   };
 

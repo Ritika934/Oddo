@@ -21,6 +21,7 @@ export const addVehicle = async (vehicleData) => {
 export const fetchAllVehicles = async (
   search,
   status,
+  type,
   page,
   limit
 ) => {
@@ -28,6 +29,7 @@ export const fetchAllVehicles = async (
   return await getAllVehicles(
     search,
     status,
+    type,
     page,
     limit
   );

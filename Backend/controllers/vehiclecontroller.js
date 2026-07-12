@@ -63,19 +63,22 @@ export const deleteVehicle = async (req, res) => {
   }
 };
 export const getVehicles = async (req, res) => {
-  try {const {
-  search = "",
-  status = "",
-  page = 1,
-  limit = 10
-} = req.query;
+  try {
+    const {
+      search = "",
+      status = "",
+      type = "",
+      page = 1,
+      limit = 10
+    } = req.query;
 
     const vehicles = await fetchAllVehicles(
-  search,
-  status,
-  page,
-  limit
-);
+      search,
+      status,
+      type,
+      page,
+      limit
+    );
 
     return res.status(200).json({
       message: "Vehicles fetched successfully",

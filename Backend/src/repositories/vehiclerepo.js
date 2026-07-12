@@ -52,6 +52,7 @@ export const createVehicle = async (vehicleData) => {
 export const getAllVehicles = async (
   search = "",
   status = "",
+  type = "",
   page = 1,
   limit = 10
 ) =>{
@@ -70,8 +71,13 @@ export const getAllVehicles = async (
 
 const offset = (page - 1) * limit;
   if (status) {
-    query += ` AND status = $2`;
+    query += ` AND status = $${values.length + 1}`;
     values.push(status);
+  }
+
+  if (type) {
+    query += ` AND vehicle_type = $${values.length + 1}`;
+    values.push(type);
   }
 
 query += `

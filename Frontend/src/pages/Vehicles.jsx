@@ -63,7 +63,7 @@ export default function Vehicles() {
         setTotalPages(Math.ceil((data.count || 10) / 10) || 1);
       }
     } catch (error) {
-      showToast(error.message || 'Failed to load vehicles', 'error');
+      showToast(error.response?.data?.message || error.message || 'Failed to load vehicles', 'error');
     } finally {
       setLoading(false);
     }
@@ -112,7 +112,12 @@ export default function Vehicles() {
       setSelectedVehicle(null);
       fetchVehicles();
     } catch (error) {
-      showToast(error.message || 'Action failed', 'error');
+      const serverMsg =
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0]?.msg ||
+        error.message ||
+        'Action failed';
+      showToast(serverMsg, 'error');
     } finally {
       setFormLoading(false);
     }
@@ -126,7 +131,12 @@ export default function Vehicles() {
       setVehicleToRetire(null);
       fetchVehicles();
     } catch (error) {
-      showToast(error.message || 'Failed to retire vehicle', 'error');
+      const serverMsg =
+        error.response?.data?.message ||
+        error.response?.data?.errors?.[0]?.msg ||
+        error.message ||
+        'Failed to retire vehicle';
+      showToast(serverMsg, 'error');
     }
   };
 
